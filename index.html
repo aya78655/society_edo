@@ -1,0 +1,1175 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>歴史クイズ 〜江戸時代(2)〜</title>
+<style>
+  :root{
+    --bg: #faf6ee;
+    --bg-card: #ffffff;
+    --ink: #2c2620;
+    --ink-soft: #6b6055;
+    --accent: #a8452f;
+    --accent-dark: #7c3220;
+    --accent-soft: #f1ded6;
+    --seiji: #c98a3b;
+    --seiji-soft: #f7ead2;
+    --bunka: #4a6fa5;
+    --bunka-soft: #dfe8f5;
+    --good: #2e7d4f;
+    --good-soft: #e0f2e6;
+    --bad: #b3392c;
+    --bad-soft: #fbe3df;
+    --border: #e4dccd;
+    --shadow: 0 4px 16px rgba(60, 45, 25, 0.08);
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg: #1c1712;
+      --bg-card: #2a231c;
+      --ink: #f2ece1;
+      --ink-soft: #b8ac9b;
+      --accent: #e0836a;
+      --accent-dark: #f0a58f;
+      --accent-soft: #3c2b23;
+      --seiji: #e0ac5f;
+      --seiji-soft: #3a2f1e;
+      --bunka: #8fb0e0;
+      --bunka-soft: #212f42;
+      --good: #6fce97;
+      --good-soft: #1c3327;
+      --bad: #e58879;
+      --bad-soft: #3a201d;
+      --border: #423a30;
+      --shadow: 0 4px 16px rgba(0,0,0,0.35);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg: #1c1712;
+    --bg-card: #2a231c;
+    --ink: #f2ece1;
+    --ink-soft: #b8ac9b;
+    --accent: #e0836a;
+    --accent-dark: #f0a58f;
+    --accent-soft: #3c2b23;
+    --seiji: #e0ac5f;
+    --seiji-soft: #3a2f1e;
+    --bunka: #8fb0e0;
+    --bunka-soft: #212f42;
+    --good: #6fce97;
+    --good-soft: #1c3327;
+    --bad: #e58879;
+    --bad-soft: #3a201d;
+    --border: #423a30;
+    --shadow: 0 4px 16px rgba(0,0,0,0.35);
+  }
+
+  *{ box-sizing: border-box; }
+  html,body{ margin:0; padding:0; }
+  body{
+    background: var(--bg);
+    color: var(--ink);
+    font-family: "Hiragino Sans", "Hiragino Kaku Gothic ProN", "Yu Gothic", "Noto Sans JP", "Meiryo", sans-serif;
+    min-height: 100vh;
+    line-height: 1.7;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  .wrap{
+    max-width: 680px;
+    margin: 0 auto;
+    padding: 20px 16px 56px;
+  }
+
+  header.top{
+    text-align: center;
+    padding: 22px 0 8px;
+  }
+  header.top .kicker{
+    font-size: 13px;
+    letter-spacing: 0.12em;
+    color: var(--accent);
+    font-weight: 700;
+  }
+  header.top h1{
+    margin: 6px 0 2px;
+    font-size: clamp(22px, 5.5vw, 30px);
+    font-weight: 800;
+    letter-spacing: 0.02em;
+  }
+  header.top p.sub{
+    margin: 0;
+    color: var(--ink-soft);
+    font-size: 14px;
+  }
+
+  .card{
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    box-shadow: var(--shadow);
+    padding: 22px 20px;
+    margin-top: 18px;
+  }
+
+  h2.section-title{
+    font-size: 15px;
+    font-weight: 700;
+    color: var(--ink-soft);
+    margin: 0 0 12px;
+  }
+
+  .choice-grid{
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  @media (min-width: 480px){
+    .era-grid{ grid-template-columns: 1fr 1fr 1fr; }
+    .mode-grid{ grid-template-columns: 1fr 1fr; }
+  }
+
+  .pick{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 16px;
+    border-radius: 14px;
+    border: 2px solid var(--border);
+    background: var(--bg);
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--ink);
+    transition: border-color .15s ease, background .15s ease, transform .1s ease;
+    text-align: left;
+  }
+  .pick:hover{ transform: translateY(-1px); }
+  .pick.selected{
+    border-color: var(--accent);
+    background: var(--accent-soft);
+    color: var(--accent-dark);
+  }
+  .pick .dot{
+    width: 10px; height: 10px; border-radius: 50%;
+    background: var(--border);
+    flex: none;
+  }
+  .pick.selected .dot{ background: var(--accent); }
+
+  .row-gap{ margin-top: 18px; }
+
+  button.primary{
+    display: block;
+    width: 100%;
+    padding: 15px 18px;
+    font-size: 16px;
+    font-weight: 800;
+    letter-spacing: 0.03em;
+    color: #fff;
+    background: var(--accent);
+    border: none;
+    border-radius: 14px;
+    cursor: pointer;
+    box-shadow: 0 4px 14px rgba(168,69,47,0.28);
+    transition: transform .1s ease, background .15s ease;
+  }
+  button.primary:hover{ background: var(--accent-dark); }
+  button.primary:active{ transform: scale(0.98); }
+  button.primary:disabled{
+    opacity: .5; cursor: not-allowed; box-shadow:none;
+  }
+
+  button.ghost{
+    display: block;
+    width: 100%;
+    padding: 13px 18px;
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--ink-soft);
+    background: transparent;
+    border: 2px solid var(--border);
+    border-radius: 14px;
+    cursor: pointer;
+    margin-top: 10px;
+  }
+
+  /* quiz screen */
+  .quiz-meta{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 13px;
+    color: var(--ink-soft);
+    margin-bottom: 10px;
+    font-weight: 600;
+  }
+  .era-tag{
+    display: inline-block;
+    padding: 3px 10px;
+    border-radius: 999px;
+    font-size: 12px;
+    font-weight: 800;
+  }
+  .era-tag.seiji{ background: var(--seiji-soft); color: var(--seiji); }
+  .era-tag.bunka{ background: var(--bunka-soft); color: var(--bunka); }
+
+  .progress-track{
+    height: 8px;
+    background: var(--border);
+    border-radius: 999px;
+    overflow: hidden;
+    margin-bottom: 20px;
+  }
+  .progress-fill{
+    height: 100%;
+    background: var(--accent);
+    border-radius: 999px;
+    transition: width .3s ease;
+  }
+
+  .question-text{
+    font-size: 18px;
+    font-weight: 700;
+    margin: 4px 0 20px;
+    line-height: 1.75;
+  }
+
+  .choice-btn{
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    width: 100%;
+    text-align: left;
+    padding: 14px 16px;
+    border-radius: 14px;
+    border: 2px solid var(--border);
+    background: var(--bg);
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--ink);
+    cursor: pointer;
+    margin-bottom: 10px;
+    transition: border-color .15s ease, background .15s ease;
+  }
+  .choice-btn .letter{
+    flex: none;
+    width: 26px; height: 26px;
+    border-radius: 50%;
+    background: var(--border);
+    color: var(--ink-soft);
+    font-size: 13px;
+    font-weight: 800;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .choice-btn:hover:not(:disabled){ border-color: var(--accent); }
+  .choice-btn:disabled{ cursor: default; }
+
+  .choice-btn.correct{
+    border-color: var(--good);
+    background: var(--good-soft);
+  }
+  .choice-btn.correct .letter{ background: var(--good); color: #fff; }
+
+  .choice-btn.wrong{
+    border-color: var(--bad);
+    background: var(--bad-soft);
+  }
+  .choice-btn.wrong .letter{ background: var(--bad); color: #fff; }
+
+  /* typed (記述式) answer input */
+  .type-input{
+    width: 100%;
+    padding: 14px 16px;
+    border-radius: 14px;
+    border: 2px solid var(--border);
+    background: var(--bg);
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--ink);
+    font-family: inherit;
+    margin-bottom: 10px;
+  }
+  .type-input:focus{ outline: none; border-color: var(--accent); }
+  .type-input.correct{ border-color: var(--good); background: var(--good-soft); }
+  .type-input.wrong{ border-color: var(--bad); background: var(--bad-soft); }
+  .type-input:disabled{ opacity: 0.9; }
+  .type-hint{
+    font-size: 12.5px;
+    color: var(--ink-soft);
+    margin: -2px 0 10px;
+  }
+
+  .answer-reveal{
+    display: none;
+    margin-bottom: 8px;
+    font-size: 14.5px;
+    font-weight: 700;
+  }
+  .answer-reveal b{ color: var(--accent-dark); font-size: 16px; }
+
+  .explain{
+    margin-top: 6px;
+    padding: 14px 16px;
+    border-radius: 14px;
+    background: var(--accent-soft);
+    border: 1px solid var(--border);
+    font-size: 14px;
+    color: var(--ink);
+    display: none;
+  }
+  .explain.show{ display: block; }
+  .explain b{ color: var(--accent-dark); }
+
+  /* correct / wrong result badge, shown to the left of "解説：" */
+  .result-badge{
+    display: inline-block;
+    padding: 3px 11px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 800;
+    margin-right: 8px;
+    vertical-align: middle;
+    transform: scale(0.7);
+    opacity: 0;
+  }
+  .result-badge.show{
+    animation: badge-pop .35s cubic-bezier(.26,1.4,.4,1) forwards;
+  }
+  .result-badge.correct{
+    background: var(--good-soft);
+    color: var(--good);
+    border: 1.5px solid var(--good);
+  }
+  .result-badge.wrong{
+    background: var(--bad-soft);
+    color: var(--bad);
+    border: 1.5px solid var(--bad);
+  }
+  @keyframes badge-pop{
+    0%{ transform: scale(0.6); opacity: 0; }
+    60%{ transform: scale(1.12); opacity: 1; }
+    100%{ transform: scale(1); opacity: 1; }
+  }
+  @media (prefers-reduced-motion: reduce){
+    .result-badge.show{ animation: none; transform: scale(1); opacity: 1; }
+  }
+
+  /* results */
+  .score-hero{
+    text-align: center;
+    padding: 10px 0 6px;
+  }
+  .score-hero .num{
+    font-size: 52px;
+    font-weight: 800;
+    color: var(--accent);
+    line-height: 1;
+  }
+  .score-hero .denom{
+    font-size: 16px;
+    color: var(--ink-soft);
+    margin-top: 4px;
+  }
+  .score-hero .msg{
+    margin-top: 10px;
+    font-size: 15px;
+    font-weight: 700;
+  }
+
+  .review-item{
+    border-top: 1px solid var(--border);
+    padding: 14px 0;
+  }
+  .review-item:first-child{ border-top: none; }
+  .review-q{ font-weight: 700; font-size: 14.5px; margin-bottom: 6px; }
+  .review-a{ font-size: 13.5px; color: var(--ink-soft); }
+  .review-a .your{ color: var(--bad); font-weight: 700; }
+  .review-a .right{ color: var(--good); font-weight: 700; }
+
+  .hidden{ display: none !important; }
+
+  footer.foot{
+    text-align: center;
+    margin-top: 30px;
+    font-size: 12px;
+    color: var(--ink-soft);
+  }
+
+  /* ---- まちがえ帳（保存された間違えた問題） ---- */
+  .saved-wrong-box{
+    margin-top: 22px;
+    padding: 16px;
+    border: 2px dashed var(--border);
+    border-radius: 14px;
+  }
+  .saved-wrong-title{ font-weight: 800; font-size: 15px; margin-bottom: 6px; }
+  .saved-wrong-desc{ font-size: 13px; color: var(--ink-soft); margin-bottom: 12px; line-height: 1.6; }
+  .saved-wrong-list{ margin-top: 10px; font-size: 13px; line-height: 1.6; }
+  .saved-wrong-list .review-item{ padding: 10px 0; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <div class="kicker">社会・歴史</div>
+    <h1>江戸時代(2)クイズ</h1>
+    <p class="sub">予習シリーズ 第11回のまとめ・練習問題から出題（よく出る・まちがえやすい問題）</p>
+  </header>
+
+  <!-- ===== SETUP SCREEN ===== -->
+  <div id="screen-setup" class="card">
+    <h2 class="section-title">① 範囲をえらぶ</h2>
+    <div class="choice-grid era-grid" id="era-picker">
+      <div class="pick selected" data-era="all"><span class="dot"></span>ぜんぶ</div>
+      <div class="pick" data-era="seiji"><span class="dot"></span>綱吉・白石／三大改革・田沼（1〜2）</div>
+      <div class="pick" data-era="bunka"><span class="dot"></span>学問の発達・ききんと一揆（3・くわしく）</div>
+    </div>
+
+    <h2 class="section-title row-gap">② 問題数をえらぶ</h2>
+    <div class="choice-grid era-grid" id="count-picker">
+      <div class="pick" data-count="10"><span class="dot"></span>10問</div>
+      <div class="pick" data-count="20"><span class="dot"></span>20問</div>
+      <div class="pick selected" data-count="all"><span class="dot"></span>全問</div>
+    </div>
+
+    <h2 class="section-title row-gap">③ 回答方法をえらぶ</h2>
+    <div class="choice-grid mode-grid" id="mode-picker">
+      <div class="pick selected" data-mode="choice"><span class="dot"></span>4択（選択式）</div>
+      <div class="pick" data-mode="type"><span class="dot"></span>記述式（入力）</div>
+    </div>
+
+    <div class="row-gap">
+      <button class="primary" id="btn-start">クイズをはじめる</button>
+
+    <!-- まちがえ帳：間違えた問題をブラウザに保存 -->
+    <div id="saved-wrong-box" class="saved-wrong-box" style="display:none;">
+      <div class="saved-wrong-title">📒 まちがえ帳</div>
+      <div class="saved-wrong-desc" id="saved-wrong-desc"></div>
+      <button class="primary" id="btn-saved-wrong" style="background: var(--bad); box-shadow: 0 4px 14px rgba(179,57,44,0.28);">まちがえ帳の問題に挑戦</button>
+      <button class="ghost" id="btn-saved-wrong-list">一覧を見る</button>
+      <div id="saved-wrong-list" class="saved-wrong-list hidden"></div>
+      <button class="ghost" id="btn-saved-wrong-clear">まちがえ帳をリセット</button>
+    </div>
+    </div>
+  </div>
+
+  <!-- ===== QUIZ SCREEN ===== -->
+  <div id="screen-quiz" class="card hidden">
+    <div class="quiz-meta">
+      <span id="q-counter">問題 1 / 10</span>
+      <span id="q-era-tag" class="era-tag seiji">政治の改革</span>
+    </div>
+    <div class="progress-track">
+      <div class="progress-fill" id="progress-fill" style="width:0%"></div>
+    </div>
+
+    <div class="question-text" id="q-text">問題文がここに入ります</div>
+
+    <div id="choices-holder"></div>
+
+    <div class="explain" id="explain-box">
+      <div class="answer-reveal" id="answer-reveal"></div>
+      <span class="result-badge" id="result-badge"></span>
+      <b>解説：</b><span id="explain-text"></span>
+    </div>
+
+    <div class="row-gap">
+      <button class="primary" id="btn-next" disabled>次へ</button>
+    </div>
+  </div>
+
+  <!-- ===== RESULT SCREEN ===== -->
+  <div id="screen-result" class="card hidden">
+    <div class="score-hero">
+      <div class="num"><span id="res-score">0</span>/<span id="res-total">0</span></div>
+      <div class="denom">正解</div>
+      <div class="msg" id="res-msg"></div>
+    </div>
+
+    <div id="review-holder" class="row-gap"></div>
+
+    <div class="row-gap">
+      <button class="primary" id="btn-retry-wrong" style="background: var(--bad); box-shadow: 0 4px 14px rgba(179,57,44,0.28); display:none;">間違えた問題だけやり直す</button>
+      <button class="primary" id="btn-retry" style="margin-top:10px;">もう一度おなじ設定で挑戦</button>
+      <button class="ghost" id="btn-setting">設定にもどる</button>
+    </div>
+  </div>
+
+  <footer class="foot">全て自分でノートを見直して確認しよう ✎</footer>
+</div>
+
+<script>
+/* ===========================================================
+   QUIZ DATA — 江戸時代(2)　政治の改革(seiji) / 学問の発達・社会のゆれ(bunka)
+   alt: 記述式で正解にする別解 / choiceOnly: 4択のときだけ出題
+   =========================================================== */
+const QUESTIONS = [
+  // ---------------- 1 綱吉と白石の政治 ----------------
+  {era:"seiji", q:"1680年に5代将軍となった人物はだれですか。",
+   choices:["徳川綱吉","徳川吉宗","徳川家光","徳川家斉"], a:0, alt:["徳川綱吉","綱吉"],
+   note:"1680年、徳川綱吉が5代将軍になりました。このころから幕府の財政が苦しくなりました。"},
+  {era:"seiji", q:"5代将軍徳川綱吉の時代は、何時代とよばれますか。",
+   choices:["元禄時代","享保時代","寛政時代","天保時代"], a:0, alt:["元禄時代","元禄"],
+   note:"綱吉の時代は元禄時代とよばれます。上方（大阪・京都）を中心に元禄文化が栄えました。"},
+  {era:"seiji", q:"徳川綱吉が出した、犬などの動物を極端に保護する法令を何といいますか。",
+   choices:["生類憐みの令","武家諸法度","公事方御定書","上米の制"], a:0, alt:["生類憐みの令","生類憐れみの令","生類あわれみの令"],
+   note:"生類憐みの令は犬などを極端に保護したため、人々の不満が強まりました。"},
+  {era:"seiji", q:"6代・7代の将軍に仕え、物価の安定や長崎での貿易の制限につとめた儒学者はだれですか。",
+   choices:["新井白石","本居宣長","田沼意次","青木昆陽"], a:0, alt:["新井白石"],
+   note:"新井白石は6代・7代将軍に仕えた儒学者です。"},
+  {era:"seiji", q:"新井白石が長崎での貿易を制限した目的として正しいものはどれですか。",
+   choices:["金銀の海外流出を防ぐため","キリスト教の広まりを防ぐため","商人の力をかりて財政を立て直すため","ききんに備えて米をたくわえるため"], a:0, choiceOnly:true,
+   note:"白石は長崎での貿易を制限して、金銀が海外に流れ出るのを防ごうとしました。"},
+  {era:"seiji", q:"新井白石が行った政治を何といいますか。",
+   choices:["正徳の治","享保の改革","寛政の改革","天保の改革"], a:0, alt:["正徳の治"],
+   note:"新井白石の政治を正徳の治といいます。"},
+
+  // ---------------- 2 享保の改革 ----------------
+  {era:"seiji", q:"1716年に8代将軍となり、享保の改革を行った人物はだれですか。",
+   choices:["徳川吉宗","徳川綱吉","徳川家斉","徳川家治"], a:0, alt:["徳川吉宗","吉宗"],
+   note:"紀伊藩出身の8代将軍徳川吉宗が享保の改革（1716〜1745年）を行いました。「米将軍」ともよばれました。"},
+  {era:"seiji", q:"8代将軍徳川吉宗は、どこの藩の出身ですか。",
+   choices:["紀伊藩","水戸藩","尾張藩","白河藩"], a:0, alt:["紀伊藩","紀伊","紀州藩","紀州","紀伊徳川家"],
+   note:"吉宗は紀伊藩（紀伊徳川家）から将軍家に養子に入りました。"},
+  {era:"seiji", q:"徳川吉宗が行った改革を何といいますか。",
+   choices:["享保の改革","寛政の改革","天保の改革","正徳の治"], a:0, alt:["享保の改革","享保"],
+   note:"吉宗の改革は享保の改革です。三大改革は「享保 → 寛政 → 天保」の順番。"},
+  {era:"seiji", q:"大名に米を納めさせる代わりに、参勤交代をゆるめた制度を何といいますか。",
+   choices:["上米の制","楽市・楽座","株仲間","目安箱"], a:0, alt:["上米の制","上米","上げ米","上げ米の制"],
+   note:"上米の制では、大名に1万石につき100石の米を納めさせる代わりに、江戸にいる期間を半年に短くしました。"},
+  {era:"seiji", q:"上米の制で、大名に米を出させるのとひきかえに行ったことはどれですか。",
+   choices:["参勤交代で江戸にいる期間を短くした","外様大名を幕府の役職につけた","大名に領地をあたえ、石高を増やした","公事方御定書を設けた"], a:0, choiceOnly:true,
+   note:"米を出させる代わりに、参勤交代で江戸にいる期間を短くしました。"},
+  {era:"seiji", q:"享保の改革で、耕地を増やして年貢を増やすために進められたことを何といいますか。",
+   choices:["新田開発","検地","刀狩","干拓の禁止"], a:0, alt:["新田開発"],
+   note:"新田開発を行って耕地を増やし、年貢の割合も引き上げました。"},
+  {era:"seiji", q:"徳川吉宗が、ききんに備えて栽培をすすめた作物は何ですか。",
+   choices:["さつまいも","じゃがいも","とうもろこし","綿"], a:0, alt:["さつまいも","サツマイモ","甘藷","かんしょ"],
+   note:"ききんに備えて、青木昆陽にさつまいもの栽培を研究させました。"},
+  {era:"seiji", q:"吉宗に命じられ、さつまいもの栽培を研究した人物はだれですか。",
+   choices:["青木昆陽","杉田玄白","伊能忠敬","前野良沢"], a:0, alt:["青木昆陽"],
+   note:"青木昆陽は「甘藷先生」ともよばれました。"},
+  {era:"seiji", q:"徳川吉宗は、何に関係のない洋書の輸入を許しましたか。",
+   choices:["キリスト教","仏教","儒学","医学"], a:0, alt:["キリスト教"],
+   note:"キリスト教に関係のない洋書の輸入を許したことで、のちの蘭学の発達につながりました。"},
+  {era:"seiji", q:"徳川吉宗が、裁判の公正をはかるために定めた法律を何といいますか。",
+   choices:["公事方御定書","武家諸法度","御成敗式目","禁中並公家諸法度"], a:0, alt:["公事方御定書"],
+   note:"公事方御定書は裁判や刑罰の基準を定めた法律です。御成敗式目（鎌倉時代）と区別しよう。"},
+  {era:"seiji", q:"徳川吉宗が、庶民の意見を求めるために設けた投書箱を何といいますか。",
+   choices:["目安箱","寺子屋","株仲間","町火消"], a:0, alt:["目安箱"],
+   note:"目安箱への投書から、小石川養生所の設置などが採用されました。"},
+  {era:"seiji", q:"目安箱に投書された意見から採用され、まずしい病人のためにつくられた施設を何といいますか。",
+   choices:["小石川養生所","藩校","鳴滝塾","適塾"], a:0, alt:["小石川養生所","養生所"],
+   note:"目安箱の意見から、小石川養生所が設置されました。"},
+  {era:"seiji", q:"徳川吉宗が、江戸の大火から人々を守るために組織させたものは何ですか。",
+   choices:["町火消","目安箱","株仲間","旗本"], a:0, alt:["町火消","町火消し"],
+   note:"吉宗は町火消を組織させ、江戸の火事に備えました。"},
+
+  // ---------------- 田沼意次の政治 ----------------
+  {era:"seiji", q:"1772年に老中となり、商人の力をかりた政治を行った人物はだれですか。",
+   choices:["田沼意次","松平定信","水野忠邦","新井白石"], a:0, alt:["田沼意次"],
+   note:"田沼意次は10代将軍家治の信任を得て老中になり、商人の経済力を利用して財政を立て直そうとしました（〜1786年）。"},
+  {era:"seiji", q:"田沼意次が積極的に認めて、代わりに税を取った商工業者の組合を何といいますか。",
+   choices:["株仲間","座","惣","五人組"], a:0, alt:["株仲間"],
+   note:"田沼意次は株仲間を積極的に認める代わりに税を取りました。天保の改革では逆に解散させられます。"},
+  {era:"seiji", q:"田沼意次が干拓工事を行ったが、利根川の洪水で失敗した沼はどこですか。",
+   choices:["印旛沼","琵琶湖","霞ケ浦","諏訪湖"], a:0, alt:["印旛沼"],
+   note:"印旛沼（千葉県）の干拓は利根川の洪水で失敗しました。"},
+  {era:"seiji", q:"田沼意次は長崎貿易で俵物とよばれる海産物を輸出しました。鎖国中の日本が貿易をしていた中国の王朝は何ですか。",
+   choices:["清","明","元","宋"], a:0, alt:["清"],
+   note:"江戸時代の中国は清です。鎖国中は長崎でオランダと清とだけ貿易をしていました。"},
+  {era:"seiji", q:"田沼意次の政治が批判され、意次が老中をやめるきっかけとなった、1782年に始まったききんは何ですか。",
+   choices:["天明のききん","享保のききん","天保のききん","寛永のききん"], a:0, alt:["天明のききん","天明","天明の大ききん"],
+   note:"1783年の浅間山の噴火や冷害で天明のききん（1782〜1787年）がおこり、田沼の政治への批判が高まりました。"},
+
+  // ---------------- 寛政の改革 ----------------
+  {era:"seiji", q:"1787年に老中となり、寛政の改革を行った人物はだれですか。",
+   choices:["松平定信","水野忠邦","田沼意次","徳川吉宗"], a:0, alt:["松平定信"],
+   note:"白河藩主の松平定信が寛政の改革（1787〜1793年）を行いました。"},
+  {era:"seiji", q:"松平定信は、どの将軍の孫ですか。",
+   choices:["徳川吉宗","徳川綱吉","徳川家康","徳川家光"], a:0, alt:["徳川吉宗","吉宗"],
+   note:"定信は吉宗の孫で、祖父の享保の改革にならって改革を行いました。"},
+  {era:"seiji", q:"松平定信が行った改革を何といいますか。",
+   choices:["寛政の改革","享保の改革","天保の改革","正徳の治"], a:0, alt:["寛政の改革","寛政"],
+   note:"松平定信＝寛政の改革。"},
+  {era:"seiji", q:"寛政の改革で、幕府の学校では何以外の講義が禁止されましたか。",
+   choices:["朱子学","国学","蘭学","陽明学"], a:0, alt:["朱子学"],
+   note:"幕府の学校（湯島の昌平坂学問所）で朱子学以外の講義を禁止しました（寛政異学の禁）。"},
+  {era:"seiji", q:"寛政の改革で、ききんに備えて村にたくわえさせたものは何ですか。",
+   choices:["米","さつまいも","塩","金銀"], a:0, alt:["米"],
+   note:"ききんに備えて、村で米をたくわえさせました（囲い米）。"},
+  {era:"seiji", q:"「白河の 清きに魚の すみかねて もとのにごりの 田沼恋しき」という狂歌で批判された政治はどれですか。",
+   choices:["松平定信の寛政の改革","田沼意次の政治","徳川吉宗の享保の改革","水野忠邦の天保の改革"], a:0, alt:["松平定信の寛政の改革","寛政の改革","松平定信"],
+   note:"「白河」は白河藩主の松平定信のこと。改革がきびしすぎて、田沼の時代をなつかしむ声が出ました。"},
+  {era:"seiji", q:"白河藩主で、11代将軍家斉の信頼を得て老中になった人物はだれですか。",
+   choices:["松平定信","水野忠邦","田沼意次","上杉治憲"], a:0, alt:["松平定信"],
+   note:"白河藩主＝松平定信、浜松藩主＝水野忠邦。"},
+
+  // ---------------- 米沢藩の改革・大塩平八郎の乱 ----------------
+  {era:"seiji", q:"米沢藩は、現在の何県にありましたか。",
+   choices:["山形県","宮城県","新潟県","秋田県"], a:0, alt:["山形県","山形"],
+   note:"米沢藩は現在の山形県にありました。"},
+  {era:"seiji", q:"18世紀後半に米沢藩主となり、養蚕業や製糸業をさかんにして藩の財政を立て直そうとした人物はだれですか。",
+   choices:["上杉治憲","上杉謙信","松平定信","水野忠邦"], a:0, alt:["上杉治憲","上杉鷹山","上杉ようざん"],
+   note:"上杉治憲（鷹山）は絹織物を藩の特産物にして収入を増やそうとしました。"},
+  {era:"seiji", q:"1837年、天保のききんのときに大阪で反乱を起こした人物はだれですか。",
+   choices:["大塩平八郎","天草四郎","平賀源内","高野長英"], a:0, alt:["大塩平八郎"],
+   note:"大塩平八郎は幕府の元役人（大阪町奉行所の元与力）で、陽明学者でもありました。"},
+  {era:"seiji", q:"大塩平八郎が反乱を起こした都市はどこですか。",
+   choices:["大阪","京都","江戸","長崎"], a:0, alt:["大阪","大坂"],
+   note:"大塩平八郎の乱は大阪で起こりました。"},
+  {era:"seiji", q:"大塩平八郎の乱について述べた文として正しいものはどれですか。",
+   choices:["幕府の元役人が、ききんで苦しむ人々を救おうとしない幕府に反発して起こした","都があった京都で起こった","大名が百姓を集めて江戸で起こした","幕府は外国船に砲撃をたのんで1年ほどかけてしずめた"], a:0, choiceOnly:true,
+   note:"大塩は幕府の元役人。幕府がききんで苦しむ人々を救おうとしなかったため、大阪で反乱を起こしました。乱は半日ほどでしずめられました。"},
+
+  // ---------------- 天保の改革 ----------------
+  {era:"seiji", q:"1834年に老中となり、天保の改革を行った人物はだれですか。",
+   choices:["水野忠邦","松平定信","田沼意次","新井白石"], a:0, alt:["水野忠邦"],
+   note:"浜松藩主の水野忠邦が天保の改革（1841〜1843年）を行いました。"},
+  {era:"seiji", q:"水野忠邦が行った改革を何といいますか。",
+   choices:["天保の改革","寛政の改革","享保の改革","正徳の治"], a:0, alt:["天保の改革","天保"],
+   note:"水野忠邦＝天保の改革。"},
+  {era:"seiji", q:"天保の改革で、農村を立て直すために行ったことはどれですか。",
+   choices:["江戸に出ていた百姓を強制的に村に帰した","大名に米を納めさせた","さつまいもの栽培をすすめた","株仲間を積極的に認めた"], a:0, choiceOnly:true,
+   note:"江戸に出ていた百姓を強制的に村に帰して、農村の立て直しをはかりました（人返しの法）。"},
+  {era:"seiji", q:"天保の改革で、物価を引き下げるために解散させたものは何ですか。",
+   choices:["株仲間","町火消","藩校","寺子屋"], a:0, alt:["株仲間"],
+   note:"株仲間を解散させましたが、かえって経済が混乱しました。田沼は「認めた」、水野は「解散させた」。"},
+  {era:"seiji", q:"享保・寛政・天保の改革で共通して出された、ぜいたくを禁じて節約させる命令を何といいますか。",
+   choices:["倹約令","上米の制","人返しの法","生類憐みの令"], a:0, alt:["倹約令","倹約"],
+   note:"三大改革ではどれも倹約令が出され、ぜいたくがきびしく取りしまられました。"},
+  {era:"seiji", q:"次の人物を、政治を行った順に正しくならべたものはどれですか。",
+   choices:["徳川吉宗 → 田沼意次 → 松平定信 → 水野忠邦","田沼意次 → 徳川吉宗 → 松平定信 → 水野忠邦","徳川吉宗 → 松平定信 → 田沼意次 → 水野忠邦","松平定信 → 徳川吉宗 → 水野忠邦 → 田沼意次"], a:0, choiceOnly:true,
+   note:"享保の改革（吉宗）→ 田沼の政治 → 寛政の改革（定信）→ 天保の改革（忠邦）。"},
+  {era:"seiji", q:"人物と行ったことの組み合わせとして正しいものはどれですか。",
+   choices:["徳川吉宗－目安箱・公事方御定書","松平定信－株仲間を積極的に認める","水野忠邦－生類憐みの令","田沼意次－朱子学以外の講義を禁止"], a:0, choiceOnly:true,
+   note:"吉宗＝目安箱・公事方御定書・上米の制、田沼＝株仲間を認める、定信＝朱子学以外禁止・米のたくわえ、忠邦＝株仲間の解散。"},
+  {era:"seiji", q:"新井白石が将軍に仕えて政治を行ったのは、次のどの時期ですか。",
+   choices:["綱吉が5代将軍になってから、吉宗が8代将軍になるまでの間","吉宗が8代将軍になってから、松平定信が老中になるまでの間","松平定信が老中になってから、水野忠邦が老中になるまでの間","水野忠邦が老中になった後"], a:0, choiceOnly:true,
+   note:"白石は6代・7代将軍に仕えたので、5代綱吉と8代吉宗の間です。"},
+
+  // ---------------- 3 学問の発達 ----------------
+  {era:"bunka", q:"儒学のなかでも、幕府が特に重んじた学問を何といいますか。",
+   choices:["朱子学","国学","蘭学","陽明学"], a:0, alt:["朱子学"],
+   note:"朱子学は身分の上下を重んじたので、幕府の支配に都合がよかったのです。"},
+  {era:"bunka", q:"幕府が朱子学を重んじた理由として正しいものはどれですか。",
+   choices:["身分の上下や主従関係を重んじ、幕府の支配に都合がよかったから","オランダから伝わった新しい学問だったから","日本人のもともとの考え方を明らかにする学問だったから","病気の治療に役立つ学問だったから"], a:0, choiceOnly:true,
+   note:"朱子学は君臣・父子などの上下の秩序を大切にする教えで、幕府の支配を支えました。"},
+  {era:"bunka", q:"各藩が、武士に学問を学ばせるために開いた学校を何といいますか。",
+   choices:["藩校","寺子屋","私塾","昌平坂学問所"], a:0, alt:["藩校"],
+   note:"各藩は藩校を開いて武士の子弟に学問を学ばせました。"},
+  {era:"bunka", q:"町人や百姓の子どもたちが、読み・書き・そろばんを習った民間の教育機関を何といいますか。",
+   choices:["寺子屋","藩校","適塾","鳴滝塾"], a:0, alt:["寺子屋"],
+   note:"寺子屋は町人や百姓の子が通った民間の教育機関です。武士の学校＝藩校と区別しよう。"},
+  {era:"bunka", q:"寺子屋で、読み・書きといっしょに習ったものは何ですか。",
+   choices:["そろばん","剣術","和歌","蘭学"], a:0, alt:["そろばん","算盤","ソロバン"],
+   note:"寺子屋では「読み・書き・そろばん」を習いました。"},
+  {era:"bunka", q:"儒教や仏教が伝わる前の、日本人のもともとの考え方を明らかにしようとする学問を何といいますか。",
+   choices:["国学","蘭学","朱子学","洋学"], a:0, alt:["国学"],
+   note:"国学は古事記などの古典を研究して、日本古来の考え方を明らかにしようとしました。"},
+  {era:"bunka", q:"国学を大成した、松阪の医師はだれですか。",
+   choices:["本居宣長","杉田玄白","緒方洪庵","平賀源内"], a:0, alt:["本居宣長"],
+   note:"本居宣長は松阪（三重県）の医師で、国学を大成しました。"},
+  {era:"bunka", q:"本居宣長が1798年に完成させた、古事記を研究した本は何ですか。",
+   choices:["古事記伝","解体新書","日本書紀","奥の細道"], a:0, alt:["古事記伝","『古事記伝』"],
+   note:"本居宣長は約35年かけて『古事記伝』を完成させました。"},
+  {era:"bunka", q:"オランダからもたらされたヨーロッパの学問を何といいますか。",
+   choices:["蘭学","国学","朱子学","陽明学"], a:0, alt:["蘭学","洋学"],
+   note:"オランダ語で学んだので蘭学といいます（洋学ともいいます）。当時多くの人の関心を集めました。"},
+  {era:"bunka", q:"1774年に杉田玄白・前野良沢らによって出版された、オランダの医学書の翻訳書を何といいますか。",
+   choices:["解体新書","古事記伝","大日本沿海輿地全図","蘭学事始"], a:0, alt:["解体新書","『解体新書』"],
+   note:"『ターヘル＝アナトミア』を翻訳して『解体新書』として出版しました。"},
+  {era:"bunka", q:"『解体新書』の出版の中心となった人物の一人はだれですか。",
+   choices:["杉田玄白","本居宣長","平賀源内","緒方洪庵"], a:0, alt:["杉田玄白","前野良沢"],
+   note:"杉田玄白と前野良沢らが『解体新書』を出版しました。"},
+  {era:"bunka", q:"『解体新書』のもとになった『ターヘル＝アナトミア』は、どこの国のことばで書かれていましたか。",
+   choices:["オランダ","イギリス","ロシア","スペイン"], a:0, alt:["オランダ","オランダ語"],
+   note:"鎖国中にヨーロッパで貿易を許されていたのはオランダだけでした。"},
+  {era:"bunka", q:"オランダ商館の医師で、長崎に鳴滝塾を開いた人物はだれですか。",
+   choices:["シーボルト","ザビエル","ペリー","ラクスマン"], a:0, alt:["シーボルト"],
+   note:"シーボルトはドイツ人ですが、オランダ商館の医師として来日しました（1824年 鳴滝塾）。"},
+  {era:"bunka", q:"シーボルトが長崎の郊外に開いた塾を何といいますか。",
+   choices:["鳴滝塾","適塾","松下村塾","慶應義塾"], a:0, alt:["鳴滝塾"],
+   note:"シーボルト＝長崎・鳴滝塾、緒方洪庵＝大阪・適塾。"},
+  {era:"bunka", q:"緒方洪庵が大阪に開いた塾を何といいますか。",
+   choices:["適塾","鳴滝塾","松下村塾","寺子屋"], a:0, alt:["適塾"],
+   note:"適塾からは福沢諭吉などの人材が出ました。"},
+  {era:"bunka", q:"大阪に適塾を開いた人物はだれですか。",
+   choices:["緒方洪庵","シーボルト","杉田玄白","本居宣長"], a:0, alt:["緒方洪庵"],
+   note:"緒方洪庵は大阪で適塾を開きました。"},
+
+  // ---------------- ちょっとくわしく ----------------
+  {era:"bunka", q:"およそ18年間測量を続け、蝦夷地から屋久島までの正確な日本地図をつくった人物はだれですか。",
+   choices:["伊能忠敬","杉田玄白","間宮林蔵","平賀源内"], a:0, alt:["伊能忠敬"],
+   note:"伊能忠敬は1800年から各地を測量し、西洋の学問を用いて伊能図とよばれる日本地図をつくりました。"},
+  {era:"bunka", q:"天災がおこるなどして、深刻な食料不足となることを何といいますか。",
+   choices:["ききん","一揆","打ちこわし","冷害"], a:0, alt:["ききん","飢饉"],
+   note:"江戸時代の三大ききん＝享保・天明・天保のききん。"},
+  {era:"bunka", q:"江戸時代のききんの多くは、東北地方の何を原因としていましたか。",
+   choices:["冷害","干害","洪水","地震"], a:0, alt:["冷害"],
+   note:"夏に気温が上がらない冷害によって、米が不作になりました。"},
+  {era:"bunka", q:"1783年に噴火し、天明のききんの原因の一つとなった山はどこですか。",
+   choices:["浅間山","富士山","桜島","雲仙岳"], a:0, alt:["浅間山"],
+   note:"浅間山の噴火や冷害によって、東北地方を中心に天明のききんがおこりました。"},
+  {era:"bunka", q:"1830年代におこり、大塩平八郎の乱のきっかけとなったききんを何といいますか。",
+   choices:["天保のききん","天明のききん","享保のききん","寛政のききん"], a:0, alt:["天保のききん","天保","天保の大ききん"],
+   note:"天保のききんで苦しむ人々を幕府が救わなかったため、大塩平八郎が反乱を起こしました。"},
+  {era:"bunka", q:"江戸時代の三大ききんを、おこった順に正しくならべたものはどれですか。",
+   choices:["享保 → 天明 → 天保","天明 → 享保 → 天保","享保 → 天保 → 天明","天保 → 天明 → 享保"], a:0, choiceOnly:true,
+   note:"享保のききん（吉宗のころ）→ 天明のききん（田沼のころ）→ 天保のききん（大塩の乱のころ）。"},
+  {era:"bunka", q:"農村で、年貢を減らすことや悪い役人をやめさせることを求めて百姓がおこした行動を何といいますか。",
+   choices:["百姓一揆","打ちこわし","土一揆","一向一揆"], a:0, alt:["百姓一揆"],
+   note:"農村＝百姓一揆、都市＝打ちこわし、と区別しよう。"},
+  {era:"bunka", q:"都市で、米の買い占めや売りおしみをする商人の家を貧しい人々がおそったことを何といいますか。",
+   choices:["打ちこわし","百姓一揆","土一揆","一向一揆"], a:0, alt:["打ちこわし","打ち壊し","うちこわし"],
+   note:"ききんで米の値段が上がると、都市では打ちこわしがおこりました。"},
+  {era:"bunka", q:"百姓一揆や打ちこわしの件数が特に多くなったのは、どのような時期ですか。",
+   choices:["ききんがおこった時期","新田開発が進んだ時期","鎖国が完成した時期","元禄文化が栄えた時期"], a:0, choiceOnly:true,
+   note:"グラフを見ると、天明のききん・天保のききんのころに一揆や打ちこわしが急に増えています。"}
+];
+
+/* ===========================================================
+   APP LOGIC
+   =========================================================== */
+let state = {
+  era: "all",
+  count: "all",
+  mode: "choice",
+  pool: [],
+  idx: 0,
+  score: 0,
+  answered: false,
+  wrong: [],
+  wrongOnlyMode: false
+};
+
+const eraLabel = {seiji:"政治の改革", bunka:"学問・社会"};
+
+// references to the current 記述式 input/button (rebuilt every question,
+// so we avoid fixed ids — see submitTypedAnswer)
+let typeInputEl = null;
+let typeSubmitBtnEl = null;
+
+/* ---- まちがえ帳（ブラウザの localStorage に保存） ----
+   間違えた問題を問題文をキーにして保存する。
+   あとで正解すると、まちがえ帳から自動で消える。 */
+const WRONG_KEY = 'edo2_quiz_wrongbook_v1';
+
+function loadWrongBook(){
+  try{
+    const v = JSON.parse(localStorage.getItem(WRONG_KEY) || '{}');
+    return (v && typeof v === 'object') ? v : {};
+  }catch(e){ return {}; }
+}
+function saveWrongBook(book){
+  try{ localStorage.setItem(WRONG_KEY, JSON.stringify(book)); }catch(e){}
+}
+function recordResult(item, isCorrect){
+  const book = loadWrongBook();
+  if(isCorrect){
+    delete book[item.q];
+  } else {
+    const prev = book[item.q] || {count: 0};
+    book[item.q] = {count: prev.count + 1, last: Date.now()};
+  }
+  saveWrongBook(book);
+}
+function savedWrongQuestions(){
+  const book = loadWrongBook();
+  return QUESTIONS.filter(q => book[q.q]);
+}
+function renderSavedWrongBox(){
+  const box = document.getElementById('saved-wrong-box');
+  if(!box) return;
+  const list = savedWrongQuestions();
+  if(list.length === 0){ box.style.display = 'none'; return; }
+  const book = loadWrongBook();
+  box.style.display = 'block';
+  document.getElementById('saved-wrong-desc').textContent =
+    `いま ${list.length}問 保存されています。正解すると自動でまちがえ帳から消えます。（①②の設定に関係なく保存された問題が全部出ます。③の回答方法は反映されます）`;
+  document.getElementById('btn-saved-wrong').textContent = `まちがえ帳の${list.length}問に挑戦`;
+  const holder = document.getElementById('saved-wrong-list');
+  holder.innerHTML = '';
+  list.forEach(q => {
+    const div = document.createElement('div');
+    div.className = 'review-item';
+    div.innerHTML = `
+      <div class="review-q">${q.q}</div>
+      <div class="review-a">正解：<span class="right">${q.choices[q.a]}</span>（まちがえた回数：${book[q.q].count}回）</div>
+    `;
+    holder.appendChild(div);
+  });
+}
+function startSavedWrongQuiz(){
+  let base = savedWrongQuestions();
+  if(state.mode === 'type') base = base.filter(q => !q.choiceOnly);
+  if(base.length === 0){
+    alert('記述式で出せる問題がありません。③で「4択」をえらんでください。');
+    return;
+  }
+  state.pool = shuffle(base).map(reshuffleItem);
+  state.idx = 0;
+  state.score = 0;
+  state.wrong = [];
+  state.wrongOnlyMode = true;
+  showScreen('quiz');
+  renderQuestion();
+}
+
+function shuffle(arr){
+  const a = arr.slice();
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(Math.random()*(i+1));
+    [a[i],a[j]] = [a[j],a[i]];
+  }
+  return a;
+}
+
+// lenient compare for typed (記述式) answers: ignore surrounding/inner
+// whitespace, full-width spaces, and common bracket/punctuation marks.
+function normalizeAnswer(str){
+  return (str || '')
+    .trim()
+    .replace(/[\s　]/g, '')
+    .replace(/[「」『』()（）,.、。・=＝]/g, '')
+    .toLowerCase();
+}
+
+/* ---- setup screen interactions ---- */
+document.querySelectorAll('#era-picker .pick').forEach(el=>{
+  el.addEventListener('click', ()=>{
+    document.querySelectorAll('#era-picker .pick').forEach(x=>x.classList.remove('selected'));
+    el.classList.add('selected');
+    state.era = el.dataset.era;
+  });
+});
+document.querySelectorAll('#count-picker .pick').forEach(el=>{
+  el.addEventListener('click', ()=>{
+    document.querySelectorAll('#count-picker .pick').forEach(x=>x.classList.remove('selected'));
+    el.classList.add('selected');
+    state.count = el.dataset.count;
+  });
+});
+document.querySelectorAll('#mode-picker .pick').forEach(el=>{
+  el.addEventListener('click', ()=>{
+    document.querySelectorAll('#mode-picker .pick').forEach(x=>x.classList.remove('selected'));
+    el.classList.add('selected');
+    state.mode = el.dataset.mode;
+  });
+});
+
+document.getElementById('btn-start').addEventListener('click', startQuiz);
+document.getElementById('btn-retry').addEventListener('click', startQuiz);
+document.getElementById('btn-retry-wrong').addEventListener('click', startWrongOnlyQuiz);
+document.getElementById('btn-setting').addEventListener('click', ()=>{
+  showScreen('setup');
+});
+document.getElementById('btn-next').addEventListener('click', nextQuestion);
+
+document.getElementById('btn-saved-wrong').addEventListener('click', startSavedWrongQuiz);
+document.getElementById('btn-saved-wrong-list').addEventListener('click', ()=>{
+  const l = document.getElementById('saved-wrong-list');
+  l.classList.toggle('hidden');
+  document.getElementById('btn-saved-wrong-list').textContent =
+    l.classList.contains('hidden') ? '一覧を見る' : '一覧をとじる';
+});
+document.getElementById('btn-saved-wrong-clear').addEventListener('click', ()=>{
+  if(confirm('まちがえ帳の記録をすべて消しますか？')){
+    saveWrongBook({});
+    renderSavedWrongBox();
+  }
+});
+renderSavedWrongBox();
+
+function reshuffleItem(q){
+  // shuffle choice order, tracking correct index
+  const order = shuffle(q.choices.map((c,i)=>i));
+  const choices = order.map(i=>q.choices[i]);
+  const a = order.indexOf(q.a);
+  return {era:q.era, q:q.q, note:q.note, alt:q.alt, choices, a};
+}
+
+function buildPool(){
+  let base = QUESTIONS;
+  if(state.era !== 'all') base = base.filter(q=>q.era===state.era);
+  // 文章で答える問題は4択のときだけ出題
+  if(state.mode === 'type') base = base.filter(q=>!q.choiceOnly);
+
+  let pool = shuffle(base).map(reshuffleItem);
+
+  if(state.count !== 'all'){
+    pool = pool.slice(0, parseInt(state.count, 10));
+  }
+  return pool;
+}
+
+function startQuiz(){
+  state.pool = buildPool();
+  state.idx = 0;
+  state.score = 0;
+  state.wrong = [];
+  state.wrongOnlyMode = false;
+  showScreen('quiz');
+  renderQuestion();
+}
+
+function startWrongOnlyQuiz(){
+  if(state.wrong.length === 0) return;
+  const items = state.wrong.map(w => w.orig);
+  state.pool = shuffle(items).map(reshuffleItem);
+  state.idx = 0;
+  state.score = 0;
+  state.wrong = [];
+  state.wrongOnlyMode = true;
+  showScreen('quiz');
+  renderQuestion();
+}
+
+function showScreen(name){
+  if(name === 'setup') renderSavedWrongBox();
+  document.getElementById('screen-setup').classList.toggle('hidden', name!=='setup');
+  document.getElementById('screen-quiz').classList.toggle('hidden', name!=='quiz');
+  document.getElementById('screen-result').classList.toggle('hidden', name!=='result');
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+function renderQuestion(){
+  const total = state.pool.length;
+  const item = state.pool[state.idx];
+  state.answered = false;
+
+  document.getElementById('q-counter').textContent = `問題 ${state.idx+1} / ${total}`;
+  const tag = document.getElementById('q-era-tag');
+  tag.textContent = eraLabel[item.era];
+  tag.className = 'era-tag ' + item.era;
+
+  document.getElementById('progress-fill').style.width = ((state.idx)/total*100) + '%';
+
+  document.getElementById('q-text').textContent = item.q;
+
+  const holder = document.getElementById('choices-holder');
+  holder.innerHTML = '';
+
+  if(state.mode === 'type'){
+    // build the input via createElement (not innerHTML) and give it a
+    // fresh random name/id every question, so browsers can't match it
+    // against previously-saved autofill entries and leak the answer.
+    const uniq = 'q' + state.idx + '_' + Math.random().toString(36).slice(2) + Date.now();
+
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.id = 'ti_' + uniq;
+    input.name = 'ti_' + uniq;
+    input.className = 'type-input';
+    input.placeholder = 'ひらがな・漢字で入力してね';
+    input.autocomplete = 'off';
+    input.setAttribute('autocapitalize', 'off');
+    input.setAttribute('autocorrect', 'off');
+    input.spellcheck = false;
+    // readonly-until-focus trick: most browsers refuse to offer saved
+    // autofill/prediction chips for a field that was readonly when the
+    // page loaded, even after we lift the readonly on focus.
+    input.readOnly = true;
+    input.addEventListener('focus', ()=> input.removeAttribute('readonly'), {once:true});
+
+    const hint = document.createElement('div');
+    hint.className = 'type-hint';
+    hint.textContent = '用語を正しく入力して「こたえる」を押してね';
+
+    const submitBtn = document.createElement('button');
+    submitBtn.type = 'button';
+    submitBtn.className = 'primary';
+    submitBtn.id = 'sb_' + uniq;
+    submitBtn.textContent = 'こたえる';
+
+    holder.appendChild(input);
+    holder.appendChild(hint);
+    holder.appendChild(submitBtn);
+
+    typeInputEl = input;
+    typeSubmitBtnEl = submitBtn;
+
+    submitBtn.addEventListener('click', submitTypedAnswer);
+    input.addEventListener('keydown', (e)=>{
+      if(e.key === 'Enter'){ e.preventDefault(); submitTypedAnswer(); }
+    });
+    // no auto-focus on purpose: focusing an input right as it's created
+    // (before the user has tapped it) is what makes some mobile browsers
+    // treat it as "already active" and offer saved-value predictions.
+    // Waiting for a real tap keeps the readonly-until-focus trick effective.
+  } else {
+    const letters = ['A','B','C','D'];
+    item.choices.forEach((choiceText, i)=>{
+      const btn = document.createElement('button');
+      btn.className = 'choice-btn';
+      btn.innerHTML = `<span class="letter">${letters[i]}</span><span>${choiceText}</span>`;
+      btn.addEventListener('click', ()=>selectChoice(i, btn));
+      holder.appendChild(btn);
+    });
+  }
+
+  const explainBox = document.getElementById('explain-box');
+  explainBox.classList.remove('show');
+  document.getElementById('explain-text').textContent = '';
+
+  const reveal = document.getElementById('answer-reveal');
+  reveal.style.display = 'none';
+  reveal.innerHTML = '';
+
+  const badge = document.getElementById('result-badge');
+  badge.classList.remove('show', 'correct', 'wrong');
+  badge.textContent = '';
+
+  const nextBtn = document.getElementById('btn-next');
+  nextBtn.disabled = true;
+  nextBtn.textContent = (state.idx === total-1) ? '結果を見る' : '次へ';
+}
+
+function submitTypedAnswer(){
+  if(state.answered) return;
+  const item = state.pool[state.idx];
+  const input = typeInputEl;
+  const submitBtn = typeSubmitBtnEl;
+  if(!input || !submitBtn) return;
+  const userText = input.value.trim();
+  const correctText = item.choices[item.a];
+  const accepted = [correctText].concat(item.alt || []).map(normalizeAnswer);
+  const isCorrect = userText.length > 0 && accepted.includes(normalizeAnswer(userText));
+  recordResult(item, isCorrect);
+
+  state.answered = true;
+  input.disabled = true;
+  submitBtn.disabled = true;
+  input.classList.add(isCorrect ? 'correct' : 'wrong');
+
+  const badge = document.getElementById('result-badge');
+  if(isCorrect){
+    state.score++;
+    badge.textContent = '⭕ 正解';
+    badge.classList.add('correct');
+  } else {
+    state.wrong.push({
+      orig: item,
+      q: item.q,
+      your: userText || '（未回答）',
+      right: correctText,
+      note: item.note
+    });
+    badge.textContent = '❌ 不正解';
+    badge.classList.add('wrong');
+  }
+  badge.classList.remove('show');
+  void badge.offsetWidth;
+  badge.classList.add('show');
+
+  const reveal = document.getElementById('answer-reveal');
+  reveal.style.display = 'block';
+  reveal.innerHTML = `正解：<b>${correctText}</b>`;
+
+  document.getElementById('explain-text').textContent = item.note;
+  document.getElementById('explain-box').classList.add('show');
+  document.getElementById('btn-next').disabled = false;
+}
+
+function selectChoice(i, btnEl){
+  if(state.answered) return;
+  state.answered = true;
+
+  const item = state.pool[state.idx];
+  const buttons = document.querySelectorAll('#choices-holder .choice-btn');
+  buttons.forEach(b=> b.disabled = true);
+
+  const badge = document.getElementById('result-badge');
+
+  recordResult(item, i === item.a);
+
+  if(i === item.a){
+    btnEl.classList.add('correct');
+    state.score++;
+    badge.textContent = '⭕ 正解';
+    badge.classList.add('correct');
+  } else {
+    btnEl.classList.add('wrong');
+    buttons[item.a].classList.add('correct');
+    state.wrong.push({
+      orig: item,
+      q: item.q,
+      your: item.choices[i],
+      right: item.choices[item.a],
+      note: item.note
+    });
+    badge.textContent = '❌ 不正解';
+    badge.classList.add('wrong');
+  }
+  // restart animation even if same class was already shown
+  badge.classList.remove('show');
+  void badge.offsetWidth;
+  badge.classList.add('show');
+
+  document.getElementById('explain-text').textContent = item.note;
+  document.getElementById('explain-box').classList.add('show');
+  document.getElementById('btn-next').disabled = false;
+}
+
+function nextQuestion(){
+  const total = state.pool.length;
+  if(state.idx < total-1){
+    state.idx++;
+    renderQuestion();
+  } else {
+    finishQuiz();
+  }
+}
+
+function finishQuiz(){
+  const total = state.pool.length;
+  document.getElementById('progress-fill').style.width = '100%';
+
+  document.getElementById('res-score').textContent = state.score;
+  document.getElementById('res-total').textContent = total;
+
+  const pct = Math.round((state.score/total)*100);
+  let msg = '';
+  if(pct === 100) msg = '満点！ すばらしい！';
+  else if(pct >= 80) msg = 'とてもよくできました！';
+  else if(pct >= 60) msg = 'もう少し！ 見直してみよう';
+  else msg = 'ノートを見直して、もう一度挑戦しよう';
+  const modeNote = state.wrongOnlyMode ? '（まちがえた問題のみ）' : '';
+  document.getElementById('res-msg').textContent = `正答率 ${pct}％　${msg}${modeNote}`;
+
+  const retryWrongBtn = document.getElementById('btn-retry-wrong');
+  if(state.wrong.length > 0){
+    retryWrongBtn.style.display = 'block';
+    retryWrongBtn.textContent = `間違えた${state.wrong.length}問だけやり直す`;
+  } else {
+    retryWrongBtn.style.display = 'none';
+  }
+
+  const reviewHolder = document.getElementById('review-holder');
+  reviewHolder.innerHTML = '';
+  if(state.wrong.length > 0){
+    const title = document.createElement('h2');
+    title.className = 'section-title';
+    title.textContent = '間違えた問題の復習（まちがえ帳に保存しました）';
+    reviewHolder.appendChild(title);
+
+    state.wrong.forEach(w=>{
+      const div = document.createElement('div');
+      div.className = 'review-item';
+      div.innerHTML = `
+        <div class="review-q">${w.q}</div>
+        <div class="review-a">あなたの答え：<span class="your">${w.your}</span>　→　正解：<span class="right">${w.right}</span></div>
+        <div class="review-a" style="margin-top:4px;">${w.note}</div>
+      `;
+      reviewHolder.appendChild(div);
+    });
+  }
+
+  showScreen('result');
+}
+</script>
+</body>
+</html>
